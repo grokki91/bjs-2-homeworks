@@ -1,8 +1,8 @@
 "use strict";
 
 function solveEquation(a, b, c) {
-  let arr;
-  let discriminant = b**2 - 4 * a * c;
+  let arr = [];
+  const discriminant = b**2 - 4 * a * c;
 
   if (discriminant < 0) {
     arr = [];
@@ -16,32 +16,29 @@ function solveEquation(a, b, c) {
 }
 
 function calculateTotalMortgage(percent, contribution, amount, date) {
-  let totalAmount;
-  let credit;
   let mounths;
-  let mounthPayment;
-  let numYearMortgage = new Date(date).getFullYear();
-  let numYearNow = new Date().getFullYear();
+  const numYearMortgage = new Date(date).getFullYear();
+  const numYearNow = new Date().getFullYear();
 
   if (!Number.isNaN(parseInt(percent))) {
     percent = +percent / 100 / 12;
   } else {
-    return `Параметр "Процентная ставка" содержит неправильное значение ${percent}`;
+    return `Параметр "Процентная ставка" содержит неправильное значение "${percent}"`;
   }
 
   if (!Number.isNaN(parseInt(contribution))) {
     contribution = +contribution;
   } else {
-    return `Параметр "Начальный взнос" содержит неправильное значение ${contribution}`;
+    return `Параметр "Начальный взнос" содержит неправильное значение "${contribution}"`;
   }
 
   if (!Number.isNaN(parseInt(amount))) {
     amount = +amount;
   } else {
-    return `Параметр "Общая стоимость" содержит неправильное значение ${amount}`;
+    return `Параметр "Общая стоимость" содержит неправильное значение "${amount}"`;
   }
 
-  credit = amount - contribution;
+  const credit = amount - contribution;
   
   if (typeof date === 'number') {
     mounths = date;
@@ -49,11 +46,9 @@ function calculateTotalMortgage(percent, contribution, amount, date) {
     mounths = ((numYearMortgage - numYearNow) * 12);
   }
   
-  mounthPayment = credit * (percent + (percent / (((1 + percent)**mounths) - 1)));
-  totalAmount = mounthPayment * mounths;
-  totalAmount = Number.parseFloat(totalAmount).toFixed(2);
+  const mounthPayment = credit * (percent + (percent / (((1 + percent)**mounths) - 1)));
+  const totalAmount = +Number.parseFloat(mounthPayment * mounths).toFixed(2);
   
-
   return totalAmount;
 }
 
