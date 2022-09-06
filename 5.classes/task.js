@@ -27,20 +27,20 @@ class PrintEditionItem {
 
 class Magazine extends PrintEditionItem {
     constructor(name, releaseDate, pagesCount, state, type = 'magazine') {
-        super(name, releaseDate, pagesCount, state, type);
+        super(name, releaseDate, pagesCount, state, type)
     }
 }
 
 class Book extends PrintEditionItem {
     constructor(author, name, releaseDate, pagesCount, state, type = 'book') {
-        super(name, releaseDate, pagesCount, state, type);
+        super(name, releaseDate, pagesCount, state, type)
         this.author = author;
     }
 }
 
 class NovelBook extends Book {
     constructor(author, name, releaseDate, pagesCount, state, type = 'novel') {
-        super(author, name, releaseDate, pagesCount, state, type);
+        super(author, name, releaseDate, pagesCount, state, type)
     } 
 }
 
@@ -75,7 +75,7 @@ class Library {
         let book = this.books.findIndex((book) => book.name === bookName);
 
         if (book !== -1) {
-            return this.books.splice(book, 1);
+            return this.books.splice(book, 1)[0];
         } else {
             return null;
         }
@@ -87,31 +87,30 @@ class Library {
 class Student {
     constructor(name) {
         this.name = name;
-        this.obj
+        this.marks = {};
     }
     addMark(mark, subject) {
         if (mark > 0 && mark < 6) {
-            if (this.marks === undefined && this.subjects === undefined) {
-                this.marks = [mark];
-                this.subjects = [subject];
-            } else {
-                this.marks.push(mark);
-                this.subjects.push(subject);
+            if (this.marks[subject] === undefined) {
+                this.marks[subject] = [mark];
+            } else {0
+                this.marks[subject].push(mark);
             }
         } else {
             return `Ошибка, оценка должна быть числом от 1 до 5`;
         }
     }
     getAverage() {
-        return this.marks.reduce((acc, elem) => acc + elem) / this.marks.length;
+        return Object.keys(this.marks).reduce((acc, elem) => acc + this.getAverageBySubject(elem), 0) / Object.keys(this.marks).length;
     }
     getAverageBySubject(subject) {
-        // for (let i = 0, j = 0; i < this.subjects.length && j < this.marks.length; i++, j++) {
-        //     this.obj[this.subjects[i]] = this.obj[this.marks[j]]
-        // }
+        if (Object.keys(this.marks).find(elem => elem === subject))  {
+            return this.marks[subject].reduce((acc, elem ) => acc + elem, 0) / this.marks[subject].length;
+        } else {
+            return 'Несуществующий предмет';
+        }
     }
     exclude(reason) {
-        delete this.subjects;
         delete this.marks;
         this.reason = reason;
     }
