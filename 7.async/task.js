@@ -1,0 +1,66 @@
+class AlarmClock {
+    constructor() {
+        this.alarmCollection = [];
+        this.timerId = null;
+    }
+    addClock(time, callback, id) {
+        if (id === undefined) {
+            throw new Error('Невозможно идентифицировать будильник. Параметр id не передан.');
+        }
+        if (!this.alarmCollection.find(elem => elem.id === id)) {
+            let alarm = {
+                id : id,
+                time : time,
+                callback : callback
+            }
+            this.alarmCollection.push(alarm);
+        } else {
+            return console.error('Будильник с таким id уже существует');
+        }
+    }
+    removeClock(id) {
+        let alarmIndex = this.alarmCollection.findIndex(elem => elem.id === id);
+        if (alarmIndex === -1) {
+            return false;     
+        } 
+        this.alarmCollection.splice(alarmIndex, 1);
+        return true;
+    } 
+    getCurrentFormattedTime() {
+        return new Date().toLocaleTimeString().slice(0,-3);
+    }
+    start() {
+        let workingClock;
+        this.alarmCollection.filter(alarm => {
+            workingClock = checkClock(alarm.time);
+        })
+        if (this.timerId === null) {
+            this.timerId = setInterval(() => {
+                this.alarmCollection.forEach(elem => elem.callback());
+            });
+        }
+    }
+    stop() {
+        if (this.timerId !== null) {
+            clearInterval(this.timerId)
+            this.timerId = null;
+        }
+    }
+    printAlarms() {
+        console.log(`Печать всех будильников в количестве: ${this.alarmCollection.length}`);
+        this.alarmCollection.forEach(elem => {
+            console.log(`Будильник № ${elem.id} заведен на ${elem.time}`);
+        })
+    } 
+    clearAlarms() {
+        setInterval(this.timerId);
+        this.alarmCollection = [];
+    }
+}
+
+function checkClock(alarm) {
+    let currentDate = new Date().toLocaleTimeString().slice(0,-3);
+    if (alarm === currentDate) {
+        this.timerId = setInterval(() => alarm.callback);
+    }
+}
