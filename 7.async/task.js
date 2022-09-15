@@ -29,10 +29,9 @@ class AlarmClock {
         if (this.timerId !== null) {
             return;
         }
-        let currentTime = this.getCurrentFormattedTime();
         let checkClock = () => {
             this.alarmCollection.forEach(alarm => {
-                if (alarm.time === currentTime) {
+                if (alarm.time === this.getCurrentFormattedTime()) {
                     return alarm.callback();
                 }
             })
