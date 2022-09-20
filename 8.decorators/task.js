@@ -3,47 +3,47 @@ function cachingDecoratorNew(func) {
   let cacheObj = {};
   function wrapper(...args) {
     const hash = args.join(',');
-    let cacheIndex = cache.findIndex(elem => {
-      if (elem.hash.every((element, index) => element === args[index])) 
-        return elem;
-      }
-    )
-    if (cacheIndex === -1) {
-      let result = func(...args);
-      cacheObj = {
-        hash : args,
-        value : result
-      }
-
-      cache.push(cacheObj);
-      if (cache.length > 5) {
-        cache.shift(cacheObj);
-      }
-      return `Вычисляем: ${result}`;
-    } else {
+    args = hash;
+    let cacheIndex = cache.findIndex(elem => elem.hash === args);
+    if (cacheIndex !== -1) {
       return `Из кэша: ${cache[cacheIndex].value}`;
     }
+
+    let argsParse = JSON.parse("[" + args + "]");
+    let value = func(...argsParse);
+    cacheObj = {hash, value};
+    cache.push(cacheObj);
+    if (cache.length > 5) {
+      cache.shift(cacheObj);
+    }
+
+    return `Вычисляем: ${value}`;
   }
   return wrapper;
 }
 
 
-// function debounceDecoratorNew(func, delay) {
-//   let count = 0;
-//   let timeoutId = null;
-//   function wrapper(...args) {
-//     wrapper.allCount.push(args);
-//     if (timeoutId) {
-//       console.log(timeoutId);
-//       clearTimeout(timeoutId);
-//     }
-//     timeoutId = setTimeout(() => {
-//       timeoutId = null;
-//       console.log(func(...args));
-//     }, delay);
+function debounceDecoratorNew(func, delay) {
+  let timeoutId = null;
+  let firstStartFunc = true;
+  function wrapper(...args) {
+    wrapper.allCount++;
+    if (firstStartFunc) {
+      func(...args);
+      firstStartFunc = false;
+      wrapper.count++;
+    }
 
-//   }
-//   wrapper.allCount = [];
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      wrapper.count++;
+      timeoutId = null;
+      func(...args);
+    }, delay);
+    
+  }
+  wrapper.allCount = 0;
+  wrapper.count = 0;
 
-//   return wrapper;
-// }
+  return wrapper;
+}
